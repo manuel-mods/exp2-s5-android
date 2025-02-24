@@ -1,5 +1,6 @@
 package com.example.accesibilidad.screens
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,17 +20,27 @@ import com.google.firebase.auth.FirebaseAuth
 import androidx.compose.foundation.background
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.runtime.saveable.rememberSaveable
 
 @Composable
 fun LoginScreen(navController: NavController) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var email by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
     val auth = FirebaseAuth.getInstance()
-//    if (auth.currentUser != null) {
-//        navController.navigate("home")
-//        return;
-//    }
+
+    // Verificar si hay un usuario logueado al iniciar la pantalla
+    LaunchedEffect(Unit) {
+        if (auth.currentUser != null) {
+            navController.navigate("home") {
+                // Evitar que el usuario regrese a la pantalla de login con el botón atrás
+                popUpTo(navController.graph.startDestinationId) {
+                    inclusive = true
+                }
+            }
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -51,7 +62,6 @@ fun LoginScreen(navController: NavController) {
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = "Logo",
                 modifier = Modifier.size(100.dp).padding(16.dp)
-
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
@@ -84,7 +94,11 @@ fun LoginScreen(navController: NavController) {
                         auth.signInWithEmailAndPassword(email, password)
                             .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
-                                    navController.navigate("home")
+                                    navController.navigate("home") {
+                                        popUpTo(navController.graph.startDestinationId) {
+                                            inclusive = true
+                                        }
+                                    }
                                 } else {
                                     errorMessage = "Usuario o contraseña inválidos."
                                 }

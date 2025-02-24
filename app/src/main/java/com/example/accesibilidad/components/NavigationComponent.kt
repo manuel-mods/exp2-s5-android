@@ -5,6 +5,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.accesibilidad.screens.SearchDevicesScreen
 import com.example.accesibilidad.screens.ReadScreen
 import com.example.accesibilidad.screens.ForgotPasswordScreen
+import com.example.accesibilidad.screens.HelpScreen
 import com.example.accesibilidad.screens.TalkScreen
 import com.example.accesibilidad.screens.HomeScreen
 import com.example.accesibilidad.screens.LoginScreen
@@ -24,7 +25,7 @@ fun NavigationComponent() {
         composable("escribir") { ReadScreen(navController) }
         composable("buscar") { SearchDevicesScreen(navController) }
         composable("usuarios") { UsersScreen(navController) }
-
+        composable("ayuda") { HelpScreen(navController) }
     }
 
 }

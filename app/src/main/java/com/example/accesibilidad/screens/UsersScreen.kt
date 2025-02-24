@@ -21,13 +21,13 @@ fun UsersScreen(navController: NavController) {
     val users = remember { mutableStateListOf<User>() }
     val db = FirebaseFirestore.getInstance()
 
-    // Obtener la lista de usuarios de Firebase Firestore
+
     LaunchedEffect(Unit) {
         db.collection("users").get().addOnSuccessListener { result ->
             users.clear()
             for (document in result) {
                 val username = document.getString("email") ?: ""
-                // Se oculta la contraseña por seguridad
+
                 users.add(User(username, "***"))
             }
         }
@@ -73,7 +73,6 @@ fun UsersScreen(navController: NavController) {
                     }
                 }
             } else {
-                // Mientras se cargan los datos se muestra un indicador de progreso
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()
                 }

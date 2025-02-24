@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -23,7 +22,8 @@ import com.google.firebase.auth.FirebaseAuth
 @Composable
 fun HomeScreen(navController: NavController) {
     val auth = FirebaseAuth.getInstance()
-
+    // Obtener el correo del usuario actual, si está disponible
+    val userEmail = auth.currentUser?.email ?: "Usuario"
 
     Box(
         modifier = Modifier
@@ -40,14 +40,21 @@ fun HomeScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
-
+            // Mostrar logo (opcional)
             Image(
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = "Logo",
                 modifier = Modifier.size(100.dp)
             )
 
+            // Mostrar bienvenida con correo del usuario
+            Text(
+                text = "Bienvenido $userEmail",
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold
+            )
 
+            // Card con botones en formato de 2 columnas por fila
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -59,43 +66,59 @@ fun HomeScreen(navController: NavController) {
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
             ) {
                 Column(
-                    modifier = Modifier
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Button(
-                        onClick = { navController.navigate("hablar") },
+                    Row(
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        Text("Hablar")
+                        Button(
+                            onClick = { navController.navigate("hablar") },
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(48.dp),
+                            shape = RoundedCornerShape(8.dp)
+                        ) {
+                            Text("Hablar")
+                        }
+                        Button(
+                            onClick = { navController.navigate("escribir") },
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(48.dp),
+                            shape = RoundedCornerShape(8.dp)
+                        ) {
+                            Text("Escribir")
+                        }
                     }
-                    Button(
-                        onClick = { navController.navigate("escribir") },
+                    Row(
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        Text("Escribir")
-                    }
-                    Button(
-                        onClick = { navController.navigate("buscar") },
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Text("Buscar Dispositivo")
-                    }
-                    Button(
-                        onClick = { navController.navigate("usuarios") },
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Text("Usuarios")
+                        Button(
+                            onClick = { navController.navigate("buscar") },
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(48.dp),
+                            shape = RoundedCornerShape(8.dp)
+                        ) {
+                            Text("Mi Ubicación")
+                        }
+                        Button(
+                            onClick = { navController.navigate("ayuda") },
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(48.dp),
+                            shape = RoundedCornerShape(8.dp)
+                        ) {
+                            Text("Ayuda")
+                        }
                     }
                 }
             }
 
-
+            // Texto para cerrar sesión
             Text(
                 text = "Cerrar sesión",
                 color = MaterialTheme.colorScheme.primary,
